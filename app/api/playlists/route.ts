@@ -108,16 +108,14 @@ export async function PUT(request: NextRequest) {
                 [title, playlistId]
             );
 
-            const checkTracksRes = await pool.query("SELECT id From tracks where id = ANY ($1)", tracks);
+            const checkTracksRes = await client.query("SELECT id From tracks where id = ANY ($1)", tracks);
             const validTracksData: number[] = checkTracksRes.rows.map(r => r.id);
 
-            await pool.query('DELETE FROM playlist_tracks where playlist_id = $1', [playlistId]);
+            await client.query('DELETE FROM playlist_tracks where playlist_id = $1', [playlistId]);
             for (const trackId of validTracksData) {
-                await pool.query('INSERT INTO playlist_tracks (playlist_id, track_id) VALUES ($1, $2)',
+                await client.query('INSERT INTO playlist_tracks (playlist_id, track_id) VALUES ($1, $2)',
                     [playlistId, trackId]);
             }
-
-
             await client.query('COMMIT');
             return NextResponse.json({ message: 'Playlist updated successfully' });
         } catch (err) {
