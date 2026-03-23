@@ -104,14 +104,14 @@ export async function PUT(request: NextRequest) {
         try {
             await client.query('BEGIN');
             await client.query(
-                `UPDATE playlists SET title=$1 WHERE id=$2`,
+                `UPDATE playlists SET title = $1 WHERE id = $2`,
                 [title, playlistId]
             );
 
-            const checkTracksRes = await client.query("SELECT id From tracks where id = ANY ($1)", tracks);
+            const checkTracksRes = await client.query("SELECT id FROM tracks WHERE id = ANY ($1)", tracks);
             const validTracksData: number[] = checkTracksRes.rows.map(r => r.id);
 
-            await client.query('DELETE FROM playlist_tracks where playlist_id = $1', [playlistId]);
+            await client.query('DELETE FROM playlist_tracks WHERE playlist_id = $1', [playlistId]);
             for (const trackId of validTracksData) {
                 await client.query('INSERT INTO playlist_tracks (playlist_id, track_id) VALUES ($1, $2)',
                     [playlistId, trackId]);
@@ -141,11 +141,11 @@ export async function DELETE(request: NextRequest) {
         if (playlistIdParam) {
             idNum = parseInt(playlistIdParam, 10);
             if (isNaN(idNum)) {
-                return NextResponse.json({error: 'Invalid userId parameter'}, {status: 400});
+                return NextResponse.json({error: 'Invalid playlistID parameter'}, {status: 400});
             }
         }
         else {
-            return NextResponse.json({error: 'Missing required playlist id'}, {status: 400});
+            return NextResponse.json({error: 'Missing required playlistId'}, {status: 400});
         }
 
         const result = await pool.query('DELETE FROM playlists WHERE id = $1 RETURNING id', [idNum]);
