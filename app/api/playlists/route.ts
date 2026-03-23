@@ -103,19 +103,27 @@ export async function PUT(request: NextRequest) {
         const client = await pool.connect();
         try {
             await client.query('BEGIN');
-            await client.query(
-                `UPDATE playlists SET title = $1 WHERE id = $2`,
-                [title, playlistId]
-            );
 
-            const checkTracksRes = await client.query("SELECT id FROM tracks WHERE id = ANY ($1)", [tracks]);
-            const validTracksData: number[] = checkTracksRes.rows.map(r => r.id);
-
-            await client.query('DELETE FROM playlist_tracks WHERE playlist_id = $1', playlistId);
-            for (const trackId of validTracksData) {
-                await client.query('INSERT INTO playlist_tracks (playlist_id, track_id) VALUES ($1, $2)',
-                    [playlistId, trackId]);
+            if (title) {
+                await client.query(
+                    `UPDATE playlists
+                     SET title = $1
+                     WHERE id = $2`,
+                    [title, playlistId]
+                );
             }
+
+            if (tracks && tracks.length > 0) {
+                const checkTracksRes = await client.query("SELECT id FROM tracks WHERE id = ANY ($1)", [tracks]);
+                const validTracksData: number[] = checkTracksRes.rows.map(r => r.id);
+
+                await client.query('DELETE FROM playlist_tracks WHERE playlist_id = $1', [playlistId]);
+                for (const trackId of validTracksData) {
+                    await client.query('INSERT INTO playlist_tracks (playlist_id, track_id) VALUES ($1, $2)',
+                        [playlistId, trackId]);
+                }
+            }
+
             await client.query('COMMIT');
             return NextResponse.json({ message: 'Playlist updated successfully' });
         } catch (err) {
