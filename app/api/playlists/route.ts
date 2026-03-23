@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
         }
 
         const playlistIds = playlistData.map(p => p.id);
-        const playlistTrackRes= await pool.query ('SELECT * FROM playlist_tracks WHERE playlist_id = $1'
+        const playlistTrackRes= await pool.query ('SELECT * FROM playlist_tracks WHERE playlist_id = ANY($1)'
             , [playlistIds]);
         const playlistsTracksData:PlaylistTracks[] = playlistTrackRes.rows;
 
