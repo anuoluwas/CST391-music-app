@@ -58,16 +58,16 @@ export async function POST(request: NextRequest) {
             await client.query('BEGIN');
             const userId = 1; //hardcoded user ID (admin)
             const playlistRes = await client.query(
-                `INSERT INTO playlist (title, user_id) VALUES ($1, $2) RETURNING id`,
+                `INSERT INTO playlists (title, user_id) VALUES ($1, $2) RETURNING id`,
                 [title, userId]
             );
             const playlistId: number = playlistRes.rows[0].id;
 
-           const checkTracksRes = await pool.query("SELECT id From tracks WHERE id = ANY($1)", tracks);
+           const checkTracksRes = await client.query("SELECT id From tracks WHERE id = ANY($1)", [tracks]);
            const validTracksData: number[] = checkTracksRes.rows.map(r => r.id);
 
             for (const trackId of validTracksData) {
-                await pool.query('INSERT INTO playlist_tracks (playlist_id, track_id) VALUES ($1, $2)',
+                await client.query('INSERT INTO playlist_tracks (playlist_id, track_id) VALUES ($1, $2)',
                     [playlistId, trackId]);
             }
 
