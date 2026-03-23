@@ -16,20 +16,25 @@ export async function GET(request: NextRequest) {
             if (isNaN(idNum)) {
                 return NextResponse.json({ error: 'Invalid userId parameter' }, { status: 400 });
             }
-            const playlistRes = await pool.query('SELECT * FROM playlists WHERE user_id = $1 ', [idNum]);
+            const playlistRes = await pool.query('SELECT * FROM playlists WHERE user_id = $1', [idNum]);
             playlistData = playlistRes.rows;
         } else {
             const playlistRes = await pool.query('SELECT * FROM playlists');
             playlistData = playlistRes.rows;
         }
 
-        const playlistTrackRes = await pool.query ('SELECT * FROM playlists_tracks');
+        if (playlistData.length === 0) {
+            return NextResponse.json([], { status: 200 });
+        }
+
+        const playlistIds = playlistData.map(p => p.id);
+        const playlistTrackRes= await pool.query ('SELECT * FROM playlist_tracks WHERE playlist_id = $1'
+            , [playlistIds]);
         const playlistsTracksData:PlaylistTracks[] = playlistTrackRes.rows;
 
         const playlistsWithTracks : Playlist[] = playlistData.map (playlist => ({
             id: playlist.id,
             user_id: playlist.user_id,
-
             title: playlist.title,
             tracks: playlistsTracksData
                 .filter(pt => pt.playlist_id === playlist.id)
