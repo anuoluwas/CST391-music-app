@@ -1,5 +1,3 @@
-
-
 export interface Track {
     id: number;
     title: string;
@@ -22,3 +20,19 @@ export interface Album {
 export interface Artist{
     artist: string;
 }
+
+export interface Playlist {
+    id: number;
+    user_id: number;
+    title: string;
+    tracks: number[]
+}
+
+export interface PlaylistTracks{
+    id: number;
+    playlist_id:number,
+    track_id: number
+}
+
+
+
