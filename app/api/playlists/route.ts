@@ -29,6 +29,7 @@ export async function GET(request: NextRequest) {
         const playlistsWithTracks : Playlist[] = playlistData.map (playlist => ({
             id: playlist.id,
             user_id: playlist.user_id,
+
             title: playlist.title,
             tracks: playlistsTracksData
                 .filter(pt => pt.playlist_id === playlist.id)
@@ -62,7 +63,7 @@ export async function POST(request: NextRequest) {
             );
             const playlistId: number = playlistRes.rows[0].id;
 
-           const checkTracksRes = await pool.query("SELECT id From tracks where id = ANY ($1)", tracks);
+           const checkTracksRes = await pool.query("SELECT id From tracks WHERE id = ANY($1)", tracks);
            const validTracksData: number[] = checkTracksRes.rows.map(r => r.id);
 
             for (const trackId of validTracksData) {
@@ -126,4 +127,34 @@ export async function PUT(request: NextRequest) {
         return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
     }
 }
+
+export async function DELETE(request: NextRequest) {
+    try {
+        const pool = getPool();
+        const url = new URL(request.url);
+        const playlistIdParam = url.searchParams.get('playlistId');
+        let idNum: number;
+
+        if (playlistIdParam) {
+            idNum = parseInt(playlistIdParam, 10);
+            if (isNaN(idNum)) {
+                return NextResponse.json({error: 'Invalid userId parameter'}, {status: 400});
+            }
+        }
+        else {
+            return NextResponse.json({error: 'Missing required playlist id'}, {status: 400});
+        }
+
+        const result = await pool.query('DELETE FROM playlists WHERE id = $1 RETURNING id', [idNum]);
+
+        if (result.rowCount === 0) {
+            return NextResponse.json({error: 'Playlist not found'}, {status: 404});
+        }
+        return NextResponse.json({ message: `Playlist ${idNum} was deleted`});
+    }  catch (error) {
+        console.error(`DELETE /api/playlists/${request.url} error:`, error);
+        return NextResponse.json({ error: 'Failed to delete playlist' }, { status: 500 });
+    }
+}
+
 
