@@ -104,7 +104,7 @@ export async function PUT(request: NextRequest) {
         try {
             await client.query('BEGIN');
             await client.query(
-                `UPDATE playlists SET title=$1 WHERE id=$6`,
+                `UPDATE playlists SET title=$1 WHERE id=$2`,
                 [title, playlistId]
             );
 
