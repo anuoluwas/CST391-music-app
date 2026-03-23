@@ -108,10 +108,10 @@ export async function PUT(request: NextRequest) {
                 [title, playlistId]
             );
 
-            const checkTracksRes = await client.query("SELECT id FROM tracks WHERE id = ANY ($1)", tracks);
+            const checkTracksRes = await client.query("SELECT id FROM tracks WHERE id = ANY ($1)", [tracks]);
             const validTracksData: number[] = checkTracksRes.rows.map(r => r.id);
 
-            await client.query('DELETE FROM playlist_tracks WHERE playlist_id = $1', [playlistId]);
+            await client.query('DELETE FROM playlist_tracks WHERE playlist_id = $1', playlistId);
             for (const trackId of validTracksData) {
                 await client.query('INSERT INTO playlist_tracks (playlist_id, track_id) VALUES ($1, $2)',
                     [playlistId, trackId]);
