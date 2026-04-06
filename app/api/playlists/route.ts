@@ -42,7 +42,6 @@ export async function GET(request: NextRequest) {
         }));
         return NextResponse.json(playlistsWithTracks);
     }
-
     catch (error) {
         console.error('GET /api/playlists error:', error);
         return NextResponse.json({ error: 'Failed to fetch playlists' }, { status: 500 });
