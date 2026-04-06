@@ -1,0 +1,86 @@
+"use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import {Album} from "@/lib/types";
+//import './app.css';
+//import dataSource from "./dataSource";
+//import {BrowserRouter, Route, Routes} from "react-router-dom";
+//import SearchAlbum from "./SearchAlbum";
+//import NavBar from "./NavBar";
+//import EditAlbum from "./EditAlbum";
+//import OneAlbum from "./OneAlbum";
+
+export default function Page() {
+    const [searchPhrase, setSearchPhrase] = useState("");
+    const [albumList, setAlbumList] = useState<Album[]>([]);
+    const [currentlySelectedAlbumId, setCurrentlySelectedAlbumId] = useState(0);
+
+    let router = useRouter();
+
+    const loadAlbums = async () => {
+        const response = await fetch("/api/albums");
+        const data = await response.json();
+        console.log("Fetched albums:", data);
+        setAlbumList(data);
+    };
+
+    //Setup initialization callback
+    useEffect(() => {
+        //Update album list
+        loadAlbums();
+    }, []);
+
+    const updateSearchResults = (phrase: string) => {
+        console.log("phrase is " + phrase);
+        setSearchPhrase(phrase);
+    };
+
+    const updateSingleAlbum = (albumId: number, uri: string) => {
+        console.log("Update Single Album = ", albumId);
+        const indexNumber = albumList.findIndex((a) => a.id === albumId);
+        setCurrentlySelectedAlbumId(indexNumber);
+        const path = `${uri}${indexNumber}`;
+        console.log("path", path);
+        router.push(path);
+    };
+
+    const renderedList = albumList.filter((album) => {
+        if (
+            (album.description ?? "")
+                .toLowerCase()
+                .includes(searchPhrase.toLowerCase()) ||
+            searchPhrase === ""
+        ) {
+            return true;
+        }
+        return false;
+    });
+
+    const onEditAlbum = () => {
+        loadAlbums();
+        router.push("/");
+    };
+
+    return (
+        <main>
+            <h1>Anuoluwa Album List (Debug View)</h1>
+            <p>This JSON data is rendered directly from the API response</p>
+            <pre
+                style={{
+                    backgroundColor: "#f4f4f4",
+                    padding: "1rem",
+                    borderRadius: "8px",
+                    overflow: "auto",
+                    color: "#111",
+                    fontSize: "0.9rem",
+                    lineHeight: "1.4",
+                }}
+            >
+        {albumList.length > 0 && JSON.stringify(albumList, null, 2)}{" "}
+      </pre>
+
+            {albumList.length === 0 && <p>Loading albums...</p>}
+        </main>
+    );
+}
+

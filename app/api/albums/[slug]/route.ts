@@ -12,7 +12,7 @@ export async function GET(
   context: { params: Promise<{ slug: string }> }
 ) {
   const { slug: artistName } = await context.params;
-  console
+
   try {
     const pool = getPool();
     const albumsRes = await pool.query(
