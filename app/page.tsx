@@ -91,12 +91,13 @@ export default function Page() {
         {albumList.length > 0 && JSON.stringify(albumList, null, 2)}{" "}
       </pre>
 
-                    {albumList.length === 0 && <p>Loading albums...</p>}
-                    {albumList.length > 0 && (
-                        <AlbumList
-                            albumlist = {albumList}
-                        />
-                    )}
+            {albumList.length === 0 && <p>Loading albums...</p>}
+            {albumList.length > 0 && (
+                <AlbumCard
+                    album={albumList[0]}
+                    onClick={(album, uri) => router.push(uri)}
+                    />
+                )}
                 </>
             )}
         </main>
