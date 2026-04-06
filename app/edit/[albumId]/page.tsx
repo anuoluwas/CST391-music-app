@@ -3,13 +3,15 @@
 
 import { Album, Track } from "@/lib/types";
 import {get} from  "@/lib/apiClient";
-import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import {useParams, useRouter, useSearchParams} from "next/navigation";
+import {useState, useEffect, Suspense} from "react";
 export default function EditAlbumPage() {
     const router = useRouter();
     // Next.js params hook replaces useParams from react-router
 const params = useParams();
+const searchParams = useSearchParams();
 const albumId = params?.albumId;
+ const readOnly = searchParams?.get("readOnly") === "true"
 // undefined under /new
 const defaultAlbum: Album = {
     id: 0,
@@ -30,8 +32,15 @@ const defaultAlbum: Album = {
         if (!albumId) return; // creation mode
 
         (async () => {
-            const res = await get<Album>(`/albums/${albumId}`);
-            setAlbum(res);
+            try {
+                const url = `/albums?albumId=${albumId}`;
+                console.log("Fetching URL:", `/api${url}`);
+                const res = await get<Album[]>(`/albums?albumId=${albumId}`);
+                console.log("API response:", res);
+                if (res.length >0) {setAlbum(res[0]);}
+            }catch (err){
+                console.log ("Failed to fetch album", err)
+            }
         })();
     }, [albumId]);
 
@@ -55,16 +64,25 @@ const defaultAlbum: Album = {
                 setAlbum((prev) => ({ ...prev, [key]: e.target.value }));
 
     return (
+        <Suspense fallback={<p>Loading...</p>}>
         <main style={{ padding: "1rem" }}>
-            <h1>{albumId ? "Edit Album" : "Create Album"}</h1>
+            <h1>{readOnly ? "View Album" : albumId ? "Edit Album" : "Create Album"}</h1>
             <form onSubmit={handleSubmit}>
                 <input placeholder="Title" value={album.title} onChange={onChange("title")}/>
                 <input placeholder="Artist" value={album.artist} onChange={onChange("artist")}/>
                 <input placeholder="Year" value={album.year} onChange={onChange("year")}/>
                 <textarea placeholder="Description" value={album.description} onChange={onChange("description")}/>
                 <input placeholder="Image URL" value={album.image} onChange={onChange("image")}/>
-                <button type="submit">{albumId ? "Update" : "Save"}</button>
+
+                {readOnly ? (
+                    <button type="button" onClick={() => router.push("/")}> Home </button>
+                        ):(
+                    <button type="submit">{albumId ? "Update" : "Save"}</button>
+
+                )}
+
             </form>
         </main>
+        </Suspense>
     );
 }

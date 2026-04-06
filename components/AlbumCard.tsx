@@ -23,7 +23,7 @@ export default function AlbumCard({ album, onClick }: AlbumCardProps) {
             <p className="card-text">{album.description}</p>
             <button
                 className="btn btn-primary"
-                onClick={() => onClick(album, `/show/${album.id}`)}
+                onClick={() => onClick(album, `/edit/${album.id}?readOnly=true`)}
             >
                 View
             </button>

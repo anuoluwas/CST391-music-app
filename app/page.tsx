@@ -5,6 +5,7 @@ import {Album} from "@/lib/types";
 import {get} from "@/lib/apiClient";
 import AlbumCard from "@/components/AlbumCard";
 import AlbumList from "@/components/AlbumList";
+import SearchAlbum from "@/components/SearchAlbum";
 //import './app.css';
 //import dataSource from "./dataSource";
 //import {BrowserRouter, Route, Routes} from "react-router-dom";
@@ -17,7 +18,7 @@ export default function Page() {
     const [searchPhrase, setSearchPhrase] = useState("");
     const [albumList, setAlbumList] = useState<Album[]>([]);
     const [error, setError] = useState<string | null>(null);
-    const [currentlySelectedAlbumId, setCurrentlySelectedAlbumId] = useState(0);
+    //const [currentlySelectedAlbumId, setCurrentlySelectedAlbumId] = useState(0);
 
     let router = useRouter();
 
@@ -43,13 +44,13 @@ export default function Page() {
         setSearchPhrase(phrase);
     };
 
-    const updateSingleAlbum = (albumId: number, uri: string) => {
-        console.log("Update Single Album = ", albumId);
-        const indexNumber = albumList.findIndex((a) => a.id === albumId);
-        setCurrentlySelectedAlbumId(indexNumber);
-        const path = `${uri}${indexNumber}`;
-        console.log("path", path);
-        router.push(path);
+    const updateSingleAlbum = (album: Album, uri: string) => {
+        //console.log("Update Single Album = ", albumId);
+        //const indexNumber = albumList.findIndex((a) => a.id === albumId);
+       // setCurrentlySelectedAlbumId(indexNumber);
+        //const path = `${uri}${indexNumber}`;
+        console.log("updating single album", album);
+        router.push(uri);
     };
 
     const renderedList = albumList.filter((album) => {
@@ -91,13 +92,13 @@ export default function Page() {
         {albumList.length > 0 && JSON.stringify(albumList, null, 2)}{" "}
       </pre>
 
-            {albumList.length === 0 && <p>Loading albums...</p>}
-            {albumList.length > 0 && (
-                <AlbumCard
-                    album={albumList[0]}
-                    onClick={(album, uri) => router.push(uri)}
-                    />
-                )}
+                    {albumList.length === 0 && <p>Loading albums...</p>}
+                    {albumList.length > 0 && (
+                        <SearchAlbum albumList={renderedList}
+                                     updateSearchResults={updateSearchResults}
+                                     updateSingleAlbum={updateSingleAlbum}
+                                     />
+                    )}
                 </>
             )}
         </main>
