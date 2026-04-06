@@ -1,7 +1,8 @@
 // app/edit/[albumId]/page.tsx
 "use client";
-//import { get } from "@/lib/apiClient";
+//import { get } from "@/lib/apiClient.ts";
 import { Album, Track } from "@/lib/types";
+import {get} from  "@/lib/apiClient";
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 export default function EditAlbumPage() {
@@ -29,10 +30,8 @@ const defaultAlbum: Album = {
         if (!albumId) return; // creation mode
 
         (async () => {
-            const res = await fetch(`/api/albums/${albumId}`);
-            const data: Album = await res.json();
-            setAlbum(data);
-
+            const res = await get<Album>(`/albums/${albumId}`);
+            setAlbum(res);
         })();
     }, [albumId]);
 
