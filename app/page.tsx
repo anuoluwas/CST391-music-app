@@ -4,6 +4,7 @@ import {useRouter} from "next/navigation";
 import {Album} from "@/lib/types";
 import {get} from "@/lib/apiClient";
 import AlbumCard from "@/components/AlbumCard";
+import AlbumList from "@/components/AlbumList";
 //import './app.css';
 //import dataSource from "./dataSource";
 //import {BrowserRouter, Route, Routes} from "react-router-dom";
@@ -92,9 +93,8 @@ export default function Page() {
 
                     {albumList.length === 0 && <p>Loading albums...</p>}
                     {albumList.length > 0 && (
-                        <AlbumCard
-                            album={albumList[0]}
-                            onClick={(album, uri) => router.push(uri)}
+                        <AlbumList
+                            albumlist = {albumList}
                         />
                     )}
                 </>
