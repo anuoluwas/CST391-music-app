@@ -59,11 +59,12 @@ const defaultAlbum: Album = {
         <main style={{ padding: "1rem" }}>
             <h1>{albumId ? "Edit Album" : "Create Album"}</h1>
             <form onSubmit={handleSubmit}>
-                <input placeholder="Title"       value={album.title}       onChange={onChange("title")}       />
-                <input placeholder="Artist"      value={album.artist}      onChange={onChange("artist")}      />
-                <input placeholder="Year"        value={album.year}        onChange={onChange("year")}        />
-                <textarea placeholder="Description" value={album.description} onChange={onChange("description")} />
-                <input placeholder="Image URL"   value={album.image}       onChange={onChange("image")}       />
+                <input placeholder="Title" value={album.title} onChange={onChange("title")}/>
+                <input placeholder="Artist" value={album.artist} onChange={onChange("artist")}/>
+                <input placeholder="Year" value={album.year} onChange={onChange("year")}/>
+                <textarea placeholder="Description" value={album.description} onChange={onChange("description")}/>
+                <input placeholder="Image URL" value={album.image} onChange={onChange("image")}/>
+                <button type="submit">{albumId ? "Update" : "Save"}</button>
             </form>
         </main>
     );
