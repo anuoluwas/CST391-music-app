@@ -62,7 +62,7 @@ export default function Page() {
     };
 
     return (<main>
-            <h1>Anuoluwa Album List(without debug view)</h1>
+            <h1>Anuoluwa Album List (without debug view)</h1>
             {/*      <p>This JSON data is rendered directly from the API response</p>*/}
             {/*      {error ? (*/}
             {/*          <p style={{color: "red"}}>Error: {error}</p>*/}
