@@ -80,3 +80,64 @@ export async function DELETE(
     return NextResponse.json({ error: 'Failed to delete album' }, { status: 500 });
   }
 }
+
+export async function PUT(request: NextRequest,
+                          context: { params: Promise<{ slug: string }> }) {
+  {
+    const {slug} =  await context.params;
+    const albumId = parseInt(slug);
+    if (albumId == null) {
+      return NextResponse.json({error: 'Invalid albumId'}, {status: 400});
+    }
+
+    try {
+      const body = await request.json();
+      const {title, artist, year, description, image, tracks} = body;
+
+      const pool = getPool();
+      const client = await pool.connect();
+      try {
+        await client.query('BEGIN');
+        await client.query(
+            `UPDATE albums
+             SET title=$1,
+                 artist=$2,
+                 description=$3,
+                 year=$4,
+                 image=$5
+             WHERE id = $6`,
+            [title, artist, description ?? null, year, image ?? null, albumId]
+        );
+
+        if (Array.isArray(tracks)) {
+          for (const t of tracks as Track[]) {
+            if (t.id == null) continue;
+            await client.query(
+                `UPDATE tracks
+                 SET number=$1,
+                     title=$2,
+                     lyrics=$3,
+                     video_url=$4
+                 WHERE id = $5
+                   AND album_id = $6`,
+                [t.number, t.title, t.lyrics ?? null, t.video ?? null, t.id, albumId]
+            );
+          }
+        }
+
+        await client.query('COMMIT');
+        return NextResponse.json({message: 'Album updated successfully'});
+      } catch (err) {
+        await client.query('ROLLBACK');
+        console.error('PUT /api/albums transaction error:', err);
+        return NextResponse.json({error: 'Error updating album'}, {status: 500});
+      } finally {
+        client.release();
+      }
+    } catch (error) {
+      console.error('PUT /api/albums parse error:', error);
+      return NextResponse.json({error: 'Invalid JSON body'}, {status: 400});
+    }
+  }
+}
+

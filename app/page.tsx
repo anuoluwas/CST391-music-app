@@ -6,13 +6,7 @@ import {get} from "@/lib/apiClient";
 import AlbumCard from "@/components/AlbumCard";
 import AlbumList from "@/components/AlbumList";
 import SearchAlbum from "@/components/SearchAlbum";
-//import './app.css';
-//import dataSource from "./dataSource";
-//import {BrowserRouter, Route, Routes} from "react-router-dom";
-//import SearchAlbum from "./SearchAlbum";
-//import NavBar from "./NavBar";
-//import EditAlbum from "./EditAlbum";
-//import OneAlbum from "./OneAlbum";
+
 
 export default function Page() {
     const [searchPhrase, setSearchPhrase] = useState("");
@@ -47,19 +41,16 @@ export default function Page() {
     const updateSingleAlbum = (album: Album, uri: string) => {
         //console.log("Update Single Album = ", albumId);
         //const indexNumber = albumList.findIndex((a) => a.id === albumId);
-       // setCurrentlySelectedAlbumId(indexNumber);
+        // setCurrentlySelectedAlbumId(indexNumber);
         //const path = `${uri}${indexNumber}`;
         console.log("updating single album", album);
         router.push(uri);
     };
 
     const renderedList = albumList.filter((album) => {
-        if (
-            (album.description ?? "")
-                .toLowerCase()
-                .includes(searchPhrase.toLowerCase()) ||
-            searchPhrase === ""
-        ) {
+        if ((album.description ?? "")
+            .toLowerCase()
+            .includes(searchPhrase.toLowerCase()) || searchPhrase === "") {
             return true;
         }
         return false;
@@ -70,38 +61,33 @@ export default function Page() {
         router.push("/");
     };
 
-    return (
-        <main>
-            <h1>Anuoluwa Album List (Debug View)</h1>
-            <p>This JSON data is rendered directly from the API response</p>
-            {error ? (
-                <p style={{color: "red"}}>Error: {error}</p>
-            ) : (
-                <>
-            <pre
-                style={{
-                    backgroundColor: "#f4f4f4",
-                    padding: "1rem",
-                    borderRadius: "8px",
-                    overflow: "auto",
-                    color: "#111",
-                    fontSize: "0.9rem",
-                    lineHeight: "1.4",
-                }}
-            >
-        {albumList.length > 0 && JSON.stringify(albumList, null, 2)}{" "}
-      </pre>
+    return (<main>
+            <h1>Anuoluwa Album List(without debug view)</h1>
+            {/*      <p>This JSON data is rendered directly from the API response</p>*/}
+            {/*      {error ? (*/}
+            {/*          <p style={{color: "red"}}>Error: {error}</p>*/}
+            {/*      ) : (*/}
+            {/*          <>*/}
+            {/*      <pre*/}
+            {/*          style={{*/}
+            {/*              backgroundColor: "#f4f4f4",*/}
+            {/*              padding: "1rem",*/}
+            {/*              borderRadius: "8px",*/}
+            {/*              overflow: "auto",*/}
+            {/*              color: "#111",*/}
+            {/*              fontSize: "0.9rem",*/}
+            {/*              lineHeight: "1.4",*/}
+            {/*          }}*/}
+            {/*      >*/}
+            {/*  {albumList.length > 0 && JSON.stringify(albumList, null, 2)}{" "}*/}
+            {/*</pre>*/}
+            {albumList.length === 0 && <p>Loading albums...</p>}
+            {albumList.length > 0 && (<SearchAlbum albumList={renderedList}
+                                                   updateSearchResults={updateSearchResults}
+                                                   updateSingleAlbum={updateSingleAlbum}
+            />)}
 
-                    {albumList.length === 0 && <p>Loading albums...</p>}
-                    {albumList.length > 0 && (
-                        <SearchAlbum albumList={renderedList}
-                                     updateSearchResults={updateSearchResults}
-                                     updateSingleAlbum={updateSingleAlbum}
-                                     />
-                    )}
-                </>
-            )}
-        </main>
-    );
+
+        </main>);
 }
 

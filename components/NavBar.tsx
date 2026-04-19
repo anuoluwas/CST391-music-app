@@ -1,14 +1,18 @@
 'use client';
 import Link from 'next/link';
 import { useEffect } from 'react';
+import {useSession} from "next-auth/react";
 export default function NavBar() {
+    const { data: session } = useSession();
+    const isLoggedIn = session?.user?.role === "user" || session?.user?.role === "admin"
+    const isAdmin = session?.user?.role === "admin";
     useEffect(() => {
         // @ts-expect-error: Bootstrap's JavaScript bundle lacks TypeScript definitions.
         import('bootstrap/dist/js/bootstrap.bundle.min.js');
     }, []);
 
     return (<nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <span className="navbar-brand">My Music</span>
+        <Link href= "/" className="navbar-brand">Music App</Link>
         <button
             className="navbar-toggler"
             type="button"
@@ -22,15 +26,20 @@ export default function NavBar() {
         </button>
         <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div className="navbar-nav">
-                <Link href="/public" className="nav-item nav-link">
-                    Main
-                </Link>
+                {isAdmin ?
                 <Link href="/new" className="nav-item nav-link">
-                    New
-                </Link>
+                    New Album
+                </Link> : null}
                 <Link href="/about" className="nav-item nav-link">
                     About
                 </Link>
+                <Link href="/api/auth/signin" className = "nav-item nav-link">
+                    Sign In
+                </Link>
+                {isLoggedIn ?
+                <Link href="/api/auth/signout" className = "nav-item nav-link">
+                    Sign Out
+                </Link>: null }
             </div>
         </div>
     </nav>);

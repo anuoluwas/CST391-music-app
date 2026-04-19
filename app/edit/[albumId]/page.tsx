@@ -52,7 +52,7 @@ const defaultAlbum: Album = {
         await fetch(url, {
             method,
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(album),
+            body: JSON.stringify({...album, albumId}),
         });
 
         router.push("/");
