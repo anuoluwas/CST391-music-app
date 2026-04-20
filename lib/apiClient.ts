@@ -2,6 +2,8 @@
 // Internal API client for Next.js (Vercel-safe)
 // Exports only typed helper functions for clarity and safety.
 
+import {Track} from "@/lib/types";
+
 type Verb = "GET" | "POST" | "PUT" | "DELETE";
 
 /**

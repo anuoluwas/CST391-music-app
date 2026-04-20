@@ -27,9 +27,17 @@ export default function NavBar() {
         <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div className="navbar-nav">
                 {isAdmin ?
-                <Link href="/new" className="nav-item nav-link">
+                    <Link href="/new" className="nav-item nav-link">
                     New Album
-                </Link> : null}
+                    </Link> : null}
+                {isLoggedIn ?
+                    <Link href="/playlists/new" className="nav-item nav-link">
+                        New Playlist
+                    </Link> : null}
+                {isLoggedIn ?
+                    <Link href="/playlists/" className="nav-item nav-link">
+                        Playlists
+                    </Link> : null}
                 <Link href="/about" className="nav-item nav-link">
                     About
                 </Link>

@@ -33,7 +33,7 @@ export const authOptions: NextAuthOptions = {
             // Simple admin allowlist via env var
             const admins = (process.env.ADMIN_EMAILS ?? "").split(",");
             token.role = admins.includes(token.email ?? "") ? "admin" : "user";
-
+            token.id = token.role === "admin" ? 1 : 0;
          return token;
         },
         /**
@@ -47,6 +47,7 @@ export const authOptions: NextAuthOptions = {
             if (session.user) {
                 // `role` is available on token because of our JWT type augmentation.
                 session.user.role = token.role as "admin" | "user" | undefined;
+                session.user.id = token.id;
             }
             return session;
             },

@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        const { title, tracks} = body;
+        const { title, tracks, user_id} = body;
         if (!title || !tracks == null) {
             return NextResponse.json({ error: 'Missing required playlist fields' }, { status: 400 });
         }
@@ -60,10 +60,9 @@ export async function POST(request: NextRequest) {
         const client = await pool.connect();
         try {
             await client.query('BEGIN');
-            const userId = 1; //hardcoded user ID (admin)
             const playlistRes = await client.query(
                 `INSERT INTO playlists (title, user_id) VALUES ($1, $2) RETURNING id`,
-                [title, userId]
+                [title, user_id]
             );
             const playlistId: number = playlistRes.rows[0].id;
 

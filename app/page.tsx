@@ -3,8 +3,6 @@ import {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import {Album} from "@/lib/types";
 import {get} from "@/lib/apiClient";
-import AlbumCard from "@/components/AlbumCard";
-import AlbumList from "@/components/AlbumList";
 import SearchAlbum from "@/components/SearchAlbum";
 
 
@@ -12,7 +10,7 @@ export default function Page() {
     const [searchPhrase, setSearchPhrase] = useState("");
     const [albumList, setAlbumList] = useState<Album[]>([]);
     const [error, setError] = useState<string | null>(null);
-    //const [currentlySelectedAlbumId, setCurrentlySelectedAlbumId] = useState(0);
+
 
     let router = useRouter();
 
@@ -39,10 +37,6 @@ export default function Page() {
     };
 
     const updateSingleAlbum = (album: Album, uri: string) => {
-        //console.log("Update Single Album = ", albumId);
-        //const indexNumber = albumList.findIndex((a) => a.id === albumId);
-        // setCurrentlySelectedAlbumId(indexNumber);
-        //const path = `${uri}${indexNumber}`;
         console.log("updating single album", album);
         router.push(uri);
     };
@@ -62,25 +56,7 @@ export default function Page() {
     };
 
     return (<main>
-            <h1>Anuoluwa Album List (without debug view)</h1>
-            {/*      <p>This JSON data is rendered directly from the API response</p>*/}
-            {/*      {error ? (*/}
-            {/*          <p style={{color: "red"}}>Error: {error}</p>*/}
-            {/*      ) : (*/}
-            {/*          <>*/}
-            {/*      <pre*/}
-            {/*          style={{*/}
-            {/*              backgroundColor: "#f4f4f4",*/}
-            {/*              padding: "1rem",*/}
-            {/*              borderRadius: "8px",*/}
-            {/*              overflow: "auto",*/}
-            {/*              color: "#111",*/}
-            {/*              fontSize: "0.9rem",*/}
-            {/*              lineHeight: "1.4",*/}
-            {/*          }}*/}
-            {/*      >*/}
-            {/*  {albumList.length > 0 && JSON.stringify(albumList, null, 2)}{" "}*/}
-            {/*</pre>*/}
+            <h1>Album List (without debug view)</h1>
             {albumList.length === 0 && <p>Loading albums...</p>}
             {albumList.length > 0 && (<SearchAlbum albumList={renderedList}
                                                    updateSearchResults={updateSearchResults}
