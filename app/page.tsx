@@ -4,15 +4,22 @@ import {useRouter} from "next/navigation";
 import {Album} from "@/lib/types";
 import {get} from "@/lib/apiClient";
 import SearchAlbum from "@/components/SearchAlbum";
+import {useSession} from "next-auth/react";
 
 
 export default function Page() {
     const [searchPhrase, setSearchPhrase] = useState("");
     const [albumList, setAlbumList] = useState<Album[]>([]);
     const [error, setError] = useState<string | null>(null);
-
-
     let router = useRouter();
+
+    const {data: session} = useSession()
+
+    useEffect(() => {
+        if (session===null) {
+            router.push("/")
+        }
+    }, [session]);
 
     const loadAlbums = async () => {
         try {

@@ -23,7 +23,7 @@ export default function EditPlaylistPage() {
 
     useEffect(() => {
         if (session===null) {
-            router.push("/playlists")
+            router.push("/")
         }
     }, [session]);
 
