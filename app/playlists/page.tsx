@@ -14,6 +14,12 @@ export default function Page() {
 
     let router = useRouter();
 
+    useEffect(() => {
+        if (session===null) {
+            router.push("/")
+        }
+    }, [session]);
+
     const loadPlaylists = async () => {
         try {
            const url = session?.user?.role === "admin"
