@@ -5,7 +5,6 @@ import {Playlist} from "@/lib/types";
 import SearchPlaylist from "@/components/SearchPlaylist";
 import {get, del} from "@/lib/apiClient";
 import {useSession} from "next-auth/react";
-import Playlists from "@/components/Playlists";
 
 export default function Page() {
     const [searchPhrase, setSearchPhrase] = useState("");

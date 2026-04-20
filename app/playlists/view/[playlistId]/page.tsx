@@ -1,6 +1,6 @@
 "use client";
 
-import {Album, Playlist, Track} from "@/lib/types";
+import {Album, Playlist} from "@/lib/types";
 import {get} from "@/lib/apiClient";
 import {useParams, useRouter} from "next/navigation";
 import {useState, useEffect} from "react";

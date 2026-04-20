@@ -10,7 +10,6 @@ export default function EditPlaylistPage() {
     const params = useParams();
     const playlistId = params?.playlistId;
 
-
     const defaultPlaylist: Playlist = {
         id: 0,
         user_id: 0,
@@ -23,7 +22,7 @@ export default function EditPlaylistPage() {
     const {data: session} = useSession()
 
     useEffect(() => {
-        if (session && session.user?.role !== "admin") {
+        if (session) {
             router.push("/playlist")
         }
     }, [session]);
