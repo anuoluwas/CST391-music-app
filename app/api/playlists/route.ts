@@ -9,9 +9,15 @@ export async function GET(request: NextRequest) {
         const pool = getPool();
         const url = new URL(request.url);
         const userIdParam = url.searchParams.get('userId');
+        const playlistIdParam = url.searchParams.get('playlistId');
         let playlistData: Playlist[];
 
-        if (userIdParam) {
+        if (playlistIdParam){
+            const idNum = parseInt(playlistIdParam, 10);
+            const playlistRes = await pool.query('SELECT * FROM playlists WHERE id = $1', [idNum])
+            playlistData = playlistRes.rows;
+        }
+        else if (userIdParam) {
             const idNum = parseInt(userIdParam, 10);
             if (isNaN(idNum)) {
                 return NextResponse.json({ error: 'Invalid userId parameter' }, { status: 400 });
