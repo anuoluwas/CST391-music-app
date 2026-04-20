@@ -33,7 +33,7 @@ export default function PlaylistCard({ playlist, onClick, onDelete }: PlaylistPr
                     >
                         View
                     </button> : null}
-                {isAdmin ?
+                {isLoggedIn ?
                     <button
                         className="btn btn-secondary"
                         onClick={() => onClick(playlist, `playlists/edit/${playlist.id}`)}
