@@ -4,6 +4,7 @@ import {Album, Playlist} from "@/lib/types";
 import {get} from "@/lib/apiClient";
 import {useParams, useRouter} from "next/navigation";
 import {useState, useEffect} from "react";
+import {useSession} from "next-auth/react";
 export default function ViewPlaylistPage() {
     const router = useRouter();
     const params = useParams();
@@ -11,16 +12,27 @@ export default function ViewPlaylistPage() {
     const[playlist, setPlaylist] = useState<Playlist>();
     const[albums, setAlbums] = useState<Album[]>([]);
 
-// Load album only when editing
+    const {data: session} = useSession()
+
+    useEffect(() => {
+        if (session===null) {
+            router.push("/playlists")
+        }
+    }, [session]);
+
+
     useEffect(() => {
         (async () => {
             try {
+
                const[playlist, albums] = await Promise.all([
                    get<Playlist[]>(`/playlists?playlistId=${playlistId}`),
                    get<Album[]>('/albums/')
                ]);
+
+               if (playlist[0].user_id == session?.user.id){
                setPlaylist(playlist[0]);
-                setAlbums(albums);
+                setAlbums(albums);}
             }catch (err){
                 console.log ("Failed to fetch playlist", err)
             }
