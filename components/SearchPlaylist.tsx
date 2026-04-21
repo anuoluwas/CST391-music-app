@@ -8,15 +8,16 @@ interface SearchPlaylistProps {
     updateSearchResults: (searchTerm: string) => void;
     updateSinglePlaylist: (playlist: Playlist, uri: string) => void;
     onDelete: (id:number) => void
+    deletingId: number| null;
 }
 
-export default function SearchPlaylist({ playlists, updateSearchResults, updateSinglePlaylist, onDelete }: SearchPlaylistProps) {
+export default function SearchPlaylist({ playlists, updateSearchResults, updateSinglePlaylist, onDelete, deletingId}: SearchPlaylistProps) {
     console.log("props with update single playlist", { playlists: playlists });
 
     return (
         <div className="container">
             <SearchForm onSubmit={updateSearchResults} />
-            <Playlists playlists={playlists} onClick={updateSinglePlaylist} onDelete={onDelete}/>
+            <Playlists playlists={playlists} onClick={updateSinglePlaylist} onDelete={onDelete} deletingId={deletingId}/>
         </div>
     );
 }

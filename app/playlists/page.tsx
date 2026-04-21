@@ -81,6 +81,7 @@ export default function Page() {
                                                   updateSearchResults={updateSearchResults}
                                                   updateSinglePlaylist={updateSinglePlaylist}
                                                   onDelete={handleDelete}
+                                                  deletingId={deletingId}
         />)}
     </main>);
 }
