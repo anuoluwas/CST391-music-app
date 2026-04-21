@@ -3,7 +3,6 @@
 
 import {Playlist} from "@/lib/types";
 import {useSession} from "next-auth/react";
-import {del} from "@/lib/apiClient";
 
 
 interface PlaylistProps {
@@ -20,7 +19,6 @@ export default function PlaylistCard({ playlist, onClick, onDelete, deletingId }
     const isAdmin = session?.user?.role === "admin";
 
     const handleDelete = async () => {
-        await del(`/playlists?playlistId=${playlist.id}`);
         onDelete(playlist.id)
     };
     return(
