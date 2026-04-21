@@ -22,6 +22,7 @@ export default function ViewPlaylistPage() {
 
 
     useEffect(() => {
+        if (!session) return;
         (async () => {
             try {
 
@@ -30,9 +31,9 @@ export default function ViewPlaylistPage() {
                    get<Album[]>('/albums/')
                ]);
 
-               if (playlist[0].user_id == session?.user.id){
+               if (session.user.role === 'admin' || playlist[0].user_id == session.user.id){
                setPlaylist(playlist[0]);
-                setAlbums(albums);}
+               setAlbums(albums);}
             }catch (err){
                 console.log ("Failed to fetch playlist", err)
             }
