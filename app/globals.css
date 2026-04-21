@@ -40,3 +40,10 @@
 /*    color-scheme: dark;*/
 /*  }*/
 /*}*/
+
+.data-grid{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+

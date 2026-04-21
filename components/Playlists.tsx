@@ -34,5 +34,5 @@ export default function Playlists({ playlists, onClick, onDelete }: PlaylistsPro
         />
     ));
 
-    return <div className="container">{allPlaylists}</div>;
+    return <div className="data-grid">{allPlaylists}</div>;
 }

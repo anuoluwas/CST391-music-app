@@ -29,5 +29,5 @@ export default function AlbumList({ albumList, onClick }: AlbumListProps) {
         />
     ));
 
-    return <div className="container">{albums}</div>;
+    return <div className="data-grid">{albums}</div>;
 }
