@@ -8,9 +8,10 @@ interface PlaylistsProps {
     playlists: Playlist[];
     onClick?: (playlist: Playlist, uri: string) => void;
     onDelete: (id: number) => void
+    deletingId: number| null;
 }
 
-export default function Playlists({ playlists, onClick, onDelete }: PlaylistsProps) {
+export default function Playlists({ playlists, onClick, onDelete, deletingId }: PlaylistsProps) {
     const router = useRouter();
 
 
@@ -31,6 +32,7 @@ export default function Playlists({ playlists, onClick, onDelete }: PlaylistsPro
             playlist={playlist}
             onClick={handleClick}
             onDelete={onDelete}
+            deletingId = {deletingId}
         />
     ));
 

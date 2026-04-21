@@ -4,16 +4,17 @@
 import {Playlist} from "@/lib/types";
 import {useSession} from "next-auth/react";
 import {del} from "@/lib/apiClient";
-import {useState} from "react";
+
 
 interface PlaylistProps {
 
     playlist: Playlist;
     onClick: (playlist: Playlist, uri: string) => void;
     onDelete: (id: number) => void
+    deletingId: number| null;
 }
 
-export default function PlaylistCard({ playlist, onClick, onDelete }: PlaylistProps) {
+export default function PlaylistCard({ playlist, onClick, onDelete, deletingId }: PlaylistProps) {
     const { data: session } = useSession();
     const isLoggedIn = session?.user?.role === "user" || session?.user?.role === "admin"
     const isAdmin = session?.user?.role === "admin";
@@ -45,6 +46,7 @@ export default function PlaylistCard({ playlist, onClick, onDelete }: PlaylistPr
                     <button
                         className="btn btn-danger"
                         onClick={handleDelete}
+                        disabled={deletingId === playlist.id}
                     >
                         Delete
                     </button> : null}
