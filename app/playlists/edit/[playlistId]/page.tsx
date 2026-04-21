@@ -28,15 +28,17 @@ export default function EditPlaylistPage() {
     }, [session]);
 
     useEffect(() => {
+        if (!session) return;
         if (!playlistId) return;
 
         (async () => {
             try {
                 const res = await get<Playlist[]>(`/playlists?playlistId=${playlistId}`);
                 console.log("API response:", res);
+                if (session.user.role === 'admin' || res[0].user_id == session.user.id){
                 if (res.length >0) {
                     setPlaylist(res[0]);
-                    setTrackInput(res[0].tracks.join(","))
+                    setTrackInput(res[0].tracks.join(","))}
                 }
             }catch (err){
                 console.log ("Failed to fetch playlist", err)
