@@ -9,6 +9,7 @@ import {useSession} from "next-auth/react";
 export default function Page() {
     const [searchPhrase, setSearchPhrase] = useState("");
     const [playlists, setPlaylists] = useState<Playlist[]>([]);
+    const [deletingId, setDeletingId] = useState<number | null>(null)
     const [error, setError] = useState<string | null>(null);
     const {data: session} = useSession();
 
@@ -61,8 +62,16 @@ export default function Page() {
     });
 
     const handleDelete = async  (id: number) => {
+        if (deletingId) return;
+        setDeletingId(id);
+        try{
         await del(`/playlists?playlistId=${id}`);
         setPlaylists(prev => prev.filter(p=>p.id != id));
+        }catch(error){
+            console.error('Error deleting playlist', error)
+        }finally {
+            setDeletingId(null);
+        }
     }
 
     return (<main>

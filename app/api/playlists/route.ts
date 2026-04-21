@@ -79,7 +79,6 @@ export async function PUT(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
     try {
-        const pool = getPool();
         const url = new URL(request.url);
         const playlistIdParam = url.searchParams.get('playlistId');
         let idNum: number;
