@@ -18,7 +18,7 @@ export default function PlaylistCard({ playlist, onClick, onDelete }: PlaylistPr
     const isAdmin = session?.user?.role === "admin";
 
     const handleDelete = async () => {
-        await del(`playlists?playlistId=${playlist.id}`);
+        await del(`/playlists?playlistId=${playlist.id}`);
         onDelete(playlist.id)
     };
     return(

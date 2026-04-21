@@ -1,6 +1,6 @@
 import {Playlist} from "@/lib/types";
 import * as playlistRepo from "@/src/lib/repositories/playlistRepository";
-import * as albumRepo from "@/src/lib/repositories/albumRepository";
+
 
 export async function getAllPlaylists(): Promise<Playlist[]> {
     const playlistData = await playlistRepo.findAllPlaylists();
